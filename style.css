@@ -164,56 +164,56 @@ body {
 
 /* Download Button */
 .download-btn {
-    position: fixed;
-    bottom: 35px;
-    right: 100px;
+  position: fixed;
+  bottom: 35px;
+  right: 100px;
 
-    background: var(--accent-color);
-    color: white;
+  background: var(--accent-color);
+  color: white;
 
-    height: 50px;
-    width: 50px;
+  height: 50px;
+  width: 50px;
 
-    border-radius: 50%;
+  border-radius: 50%;
 
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 
-    text-decoration: none;
-    overflow: hidden;
+  text-decoration: none;
+  overflow: hidden;
 
-    transition: all 0.35s ease;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    z-index: 999;
+  transition: all 0.35s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 999;
 }
 
 /* ICON FIX (important) */
 .download-btn i {
-    width: 50px;              /* fixed width */
-    text-align: center;
-    font-size: 18px;
-    flex-shrink: 0;           /* prevents shrinking */
+  width: 50px; /* fixed width */
+  text-align: center;
+  font-size: 18px;
+  flex-shrink: 0; /* prevents shrinking */
 }
 
 /* TEXT */
 .download-text {
-    white-space: nowrap;
-    opacity: 0;
-    margin-right: 15px;
-    font-size: 14px;
-    font-weight: 500;
-    transition: opacity 0.3s ease;
+  white-space: nowrap;
+  opacity: 0;
+  margin-right: 15px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: opacity 0.3s ease;
 }
 
 /* HOVER EXPAND */
 .download-btn:hover {
-    width: 190px;
-    border-radius: 30px;
+  width: 190px;
+  border-radius: 30px;
 }
 
 /* SHOW TEXT */
 .download-btn:hover .download-text {
-    opacity: 1;
+  opacity: 1;
 }
 
 /* === CONTENT CARD === */
@@ -515,7 +515,7 @@ body {
   color: var(--accent-color);
   min-width: 2rem;
 }
-  /* font-size: 0.9rem; */
+/* font-size: 0.9rem; */
 
 /* === MEDIA QUERIES === */
 @media (max-width: 768px) {
@@ -564,12 +564,16 @@ body {
 .active-link {
   background-color: var(--accent-color) !important;
   color: white !important;
-  border-radius: 30px; /* Ensures rounded corners like other buttons */
+  border-radius: 30px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(13, 110, 253, 0.3) !important;
 }
 
-/* Optional: Ensure text inside submenu stays white when active */
+/* Ensure text inside submenu stays white when active */
 .submenu .active-link {
-  background-color: var(--accent-color);
+  background-color: var(--accent-color) !important;
+  color: white !important;
+  box-shadow: 0 2px 8px rgba(13, 110, 253, 0.3);
 }
 
 /* =========================================
