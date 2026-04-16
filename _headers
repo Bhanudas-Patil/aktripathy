@@ -1,0 +1,8 @@
+/*
+  Cache-Control: public, max-age=3600
+  
+/nav.js
+  Cache-Control: public, max-age=0, must-revalidate
+  
+/style.css
+  Cache-Control: public, max-age=0, must-revalidate
