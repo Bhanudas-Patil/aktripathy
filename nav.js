@@ -5,71 +5,50 @@ document.addEventListener("DOMContentLoaded", function () {
   let activeSubmenu = null;
 
   // --- NEW: Function to Highlight Current Page ---
+  
   function setActiveLink() {
-    // Get the current file name - more robust handling
-    let currentPage = window.location.pathname.split("/").pop().trim();
+    let currentPath = window.location.pathname.toLowerCase();
 
-    // Handle root path or empty path (default to index.html)
-    if (!currentPage || currentPage === "") {
-      currentPage = "index.html";
+    // Normalize path
+    if (currentPath.endsWith("/")) {
+      currentPath = currentPath.slice(0, -1);
     }
 
-    // 🔥 FIX: Handle Netlify clean URLs (no .html)
-    if (!currentPage.includes(".")) {
-      currentPage = currentPage + ".html";
+    if (currentPath === "") {
+      currentPath = "/";
     }
 
-    // Select all nav buttons and links inside the nav container
-    const navButtons = document.querySelectorAll("#nav-container .nav-link");
     const allLinks = document.querySelectorAll("#nav-container a");
 
-    // First pass: find which page we're on and highlight it
-    let highlightedPageLink = null;
-
     allLinks.forEach((link) => {
-      const linkHref = link.getAttribute("href");
+      let href = link.getAttribute("href");
 
-      if (linkHref && linkHref !== "#") {
-        // Extract the page name (handle anchors like publications.html#books)
-        const pageFromLink = linkHref.split("#")[0].trim();
+      if (!href || href === "#") return;
 
-        // Check if this link matches the current page
-        if (
-          pageFromLink === currentPage ||
-          (currentPage === "index.html" && pageFromLink === "")
-        ) {
-          // Mark this link as active
-          link.classList.add("active-link");
-          highlightedPageLink = link;
+      // Normalize link
+      href = href.toLowerCase().replace(".html", "");
 
-          // 2. If this link is inside a submenu, highlight the parent trigger button too
-          const parentSubmenu = link.closest(".submenu");
-          if (parentSubmenu) {
-            const submenuId = parentSubmenu.id;
-            // Find the main nav button that opens this submenu
-            const parentTrigger = document.querySelector(
-              `.nav-link[data-submenu="${submenuId}"]`,
-            );
-            if (parentTrigger) {
-              parentTrigger.classList.add("active-link");
-            }
+      // Match cases:
+      if (
+        (currentPath === "/" && href === "index") ||
+        (currentPath === "/" && href === "") ||
+        currentPath.includes(href)
+      ) {
+        link.classList.add("active-link");
+
+        // Highlight parent submenu
+        const parentSubmenu = link.closest(".submenu");
+        if (parentSubmenu) {
+          const parentTrigger = document.querySelector(
+            `.nav-link[data-submenu="${parentSubmenu.id}"]`,
+          );
+          if (parentTrigger) {
+            parentTrigger.classList.add("active-link");
           }
         }
       }
     });
-
-    // Also highlight nav buttons that are direct links (like Book Chapters, Talks, Academics)
-    navButtons.forEach((btn) => {
-      const btnHref = btn.getAttribute("href");
-      if (btnHref && btnHref !== "#") {
-        const pageFromBtn = btnHref.split("#")[0].trim();
-        if (pageFromBtn === currentPage) {
-          btn.classList.add("active-link");
-        }
-      }
-    });
   }
-
   // Run the highlighter immediately
   setActiveLink();
 
