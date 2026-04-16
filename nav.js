@@ -7,35 +7,35 @@ document.addEventListener("DOMContentLoaded", function () {
   // --- NEW: Function to Highlight Current Page ---
   
   function setActiveLink() {
-    let currentPath = window.location.pathname.toLowerCase();
+    let currentPage = window.location.pathname
+      .split("/")
+      .pop()
+      .trim()
+      .toLowerCase();
 
-    // Normalize path
-    if (currentPath.endsWith("/")) {
-      currentPath = currentPath.slice(0, -1);
-    }
-
-    // Extract current page name
-    let currentPage = currentPath.split("/").pop();
-
-    if (!currentPage || currentPage === "") {
+    // Handle root
+    if (!currentPage) {
       currentPage = "index";
     }
+
+    // Remove .html if present
+    currentPage = currentPage.replace(".html", "");
 
     const allLinks = document.querySelectorAll("#nav-container a");
 
     allLinks.forEach((link) => {
-      let href = link.getAttribute("href");
+      let linkHref = link.getAttribute("href");
 
-      if (!href || href === "#") return;
+      if (!linkHref || linkHref === "#") return;
 
       // Normalize link
-      let linkPage = href.split("#")[0].replace(".html", "").toLowerCase();
+      let linkPage = linkHref.split("#")[0].toLowerCase().replace(".html", "");
 
-      // ✅ STRICT MATCH ONLY
+      // ✅ MATCH ONLY PAGE NAME
       if (linkPage === currentPage) {
         link.classList.add("active-link");
 
-        // Highlight parent submenu
+        // Highlight parent submenu if exists
         const parentSubmenu = link.closest(".submenu");
         if (parentSubmenu) {
           const parentTrigger = document.querySelector(
