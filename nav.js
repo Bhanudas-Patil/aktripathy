@@ -4,35 +4,40 @@ document.addEventListener("DOMContentLoaded", function () {
   const menuExpander = document.getElementById("menu-expander");
   let activeSubmenu = null;
 
-  // --- NEW: Function to Highlight Current Page ---
-  
   function setActiveLink() {
-    console.log("Running active link logic");
-
-    const currentPath = window.location.pathname;
-    console.log("Current path:", currentPath);
+    const currentPath = window.location.pathname
+      .replace(/\.html$/, "") // strip .html
+      .replace(/\/$/, "") // strip trailing slash
+      .toLowerCase();
 
     const links = document.querySelectorAll("#nav-container a");
 
     links.forEach((link) => {
       const href = link.getAttribute("href");
-
       if (!href || href === "#") return;
 
-      console.log("Checking link:", href);
+      // Normalize href the same way
+      const cleanHref = href
+        .replace(/\.html$/, "")
+        .replace(/^\.\//, "") // strip leading ./
+        .replace(/\/$/, "")
+        .toLowerCase();
 
-      // Remove .html from href
-      const cleanHref = href.replace(".html", "");
+      // Build the expected path (e.g. "/experience")
+      const expectedPath = cleanHref.startsWith("/")
+        ? cleanHref
+        : "/" + cleanHref;
 
-      // Match logic
-      if (
-        (currentPath === "/" && cleanHref === "index") ||
-        currentPath.includes(cleanHref)
-      ) {
-        console.log("Matched:", href);
+      const isHome =
+        (currentPath === "" || currentPath === "/index") &&
+        (cleanHref === "index" || cleanHref === "" || expectedPath === "/");
+
+      const isMatch = isHome || currentPath === expectedPath;
+
+      if (isMatch) {
         link.classList.add("active-link");
 
-        // Highlight parent submenu
+        // Highlight parent nav trigger if inside a submenu
         const parentSubmenu = link.closest(".submenu");
         if (parentSubmenu) {
           const parentTrigger = document.querySelector(
@@ -45,29 +50,23 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
-  // Run the highlighter immediately
+
   setActiveLink();
 
-  // --- EXISTING NAVIGATION LOGIC ---
+  // --- EXISTING NAVIGATION LOGIC (unchanged) ---
   navLinks.forEach((link) => {
     link.addEventListener("click", function (e) {
       e.preventDefault();
       const targetSubmenuId = this.dataset.submenu;
       const targetSubmenu = document.getElementById(targetSubmenuId);
 
-      // If clicking the same link, toggle it
       if (activeSubmenu === targetSubmenu) {
         targetSubmenu.classList.toggle("visible");
-        // If we just closed it, clear activeSubmenu
         if (!targetSubmenu.classList.contains("visible")) {
           activeSubmenu = null;
         }
       } else {
-        // Close previous
-        if (activeSubmenu) {
-          activeSubmenu.classList.remove("visible");
-        }
-        // Open new
+        if (activeSubmenu) activeSubmenu.classList.remove("visible");
         if (targetSubmenu) {
           targetSubmenu.classList.add("visible");
           activeSubmenu = targetSubmenu;
@@ -76,14 +75,12 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
 
-      // Update expander icon
       const isAnySubmenuVisible =
         !!activeSubmenu && activeSubmenu.classList.contains("visible");
       menuExpander.classList.toggle("expanded", isAnySubmenuVisible);
     });
   });
 
-  // The expander button
   menuExpander.addEventListener("click", () => {
     if (activeSubmenu && activeSubmenu.classList.contains("visible")) {
       activeSubmenu.classList.remove("visible");
@@ -92,7 +89,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Close submenu when clicking outside
   document.addEventListener("click", function (e) {
     if (!e.target.closest("#nav-container")) {
       if (activeSubmenu) {
