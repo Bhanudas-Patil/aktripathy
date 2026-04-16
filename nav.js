@@ -7,35 +7,32 @@ document.addEventListener("DOMContentLoaded", function () {
   // --- NEW: Function to Highlight Current Page ---
   
   function setActiveLink() {
-    let currentPage = window.location.pathname
-      .split("/")
-      .pop()
-      .trim()
-      .toLowerCase();
+    console.log("Running active link logic");
 
-    // Handle root
-    if (!currentPage) {
-      currentPage = "index";
-    }
+    const currentPath = window.location.pathname;
+    console.log("Current path:", currentPath);
 
-    // Remove .html if present
-    currentPage = currentPage.replace(".html", "");
+    const links = document.querySelectorAll("#nav-container a");
 
-    const allLinks = document.querySelectorAll("#nav-container a");
+    links.forEach((link) => {
+      const href = link.getAttribute("href");
 
-    allLinks.forEach((link) => {
-      let linkHref = link.getAttribute("href");
+      if (!href || href === "#") return;
 
-      if (!linkHref || linkHref === "#") return;
+      console.log("Checking link:", href);
 
-      // Normalize link
-      let linkPage = linkHref.split("#")[0].toLowerCase().replace(".html", "");
+      // Remove .html from href
+      const cleanHref = href.replace(".html", "");
 
-      // ✅ MATCH ONLY PAGE NAME
-      if (linkPage === currentPage) {
+      // Match logic
+      if (
+        (currentPath === "/" && cleanHref === "index") ||
+        currentPath.includes(cleanHref)
+      ) {
+        console.log("Matched:", href);
         link.classList.add("active-link");
 
-        // Highlight parent submenu if exists
+        // Highlight parent submenu
         const parentSubmenu = link.closest(".submenu");
         if (parentSubmenu) {
           const parentTrigger = document.querySelector(
