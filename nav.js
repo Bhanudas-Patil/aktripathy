@@ -14,8 +14,11 @@ document.addEventListener("DOMContentLoaded", function () {
       currentPath = currentPath.slice(0, -1);
     }
 
-    if (currentPath === "") {
-      currentPath = "/";
+    // Extract current page name
+    let currentPage = currentPath.split("/").pop();
+
+    if (!currentPage || currentPage === "") {
+      currentPage = "index";
     }
 
     const allLinks = document.querySelectorAll("#nav-container a");
@@ -26,14 +29,10 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!href || href === "#") return;
 
       // Normalize link
-      href = href.toLowerCase().replace(".html", "");
+      let linkPage = href.split("#")[0].replace(".html", "").toLowerCase();
 
-      // Match cases:
-      if (
-        (currentPath === "/" && href === "index") ||
-        (currentPath === "/" && href === "") ||
-        currentPath.includes(href)
-      ) {
+      // ✅ STRICT MATCH ONLY
+      if (linkPage === currentPage) {
         link.classList.add("active-link");
 
         // Highlight parent submenu
